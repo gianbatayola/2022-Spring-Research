@@ -40,16 +40,24 @@ x_train = x_train.reshape((len(x_train), np.prod(x_train.shape[1:])))
 x_test = x_test.reshape((len(x_test), np.prod(x_test.shape[1:])))
 
 autoencoder.fit(x_train, x_train,
-                epochs=100,
+                epochs=20,
                 batch_size=256,
                 validation_data=(x_test, x_test))
 
-encoded_img = encoder.predict(x_test)
-decoded_img = decoder.predict(encoded_img)
+train_encoded_img = encoder.predict(x_train)
+train_decoded_img = decoder.predict(train_encoded_img)
 
-MSE = np.square(np.subtract(x_test, decoded_img)).mean()
+test_encoded_img = encoder.predict(x_test)
+test_decoded_img = decoder.predict(test_encoded_img)
 
-print(MSE)
+#plt.imshow(x_train[0].reshape(28,28))
+#plt.imshow(decoded_img[0].reshape(28,28))
+
+train_MSE = np.square(np.subtract(x_train, train_decoded_img)).mean()
+test_MSE = np.square(np.subtract(x_test, test_decoded_img)).mean()
+
+print(train_MSE)
+print(test_MSE)
 
 end = time.time()
 
